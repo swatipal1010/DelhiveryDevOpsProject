@@ -31,7 +31,7 @@ pipeline {
         stage('Apply Kubernetes Configs') {
             steps {
                 echo 'Deploying to Kubernetes...'
-                withCredentials([file(credentialsId: 'k8s-secret-file-id', variable: 'KUBECONFIG')]) {
+                withEnv(["KUBEVIRT_KUBE_CONFIG=/var/jenkins_home/.kube/config"]) {
                     sh 'kubectl apply -f mysql-deployment.yaml'
                     sh 'kubectl apply -f wordpress-deployment.yaml'
                 }
