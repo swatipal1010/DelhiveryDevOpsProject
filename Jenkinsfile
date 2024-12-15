@@ -4,6 +4,14 @@ pipeline {
         DOCKER_IMAGE = "swati1010/wordpress-app"
     }
     stages {
+        stage('Checkout Code') {
+            steps {
+                echo 'Checking out code from GitHub...'
+                git branch: 'main',
+                    url: 'https://github.com/swatipal1010/DelhiveryDevOpsProject.git',
+                    credentialsId: 'githubToken'
+            }
+        }
         stage('Build Docker Image') {
             steps {
                 echo 'Building Docker Image...'
