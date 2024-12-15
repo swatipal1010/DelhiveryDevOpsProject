@@ -2,6 +2,7 @@ pipeline {
     agent any
     environment {
         DOCKER_IMAGE = "swati1010/wordpress-app"
+        KUBECONFIG = "/var/lib/jenkins/.kube/config"
     }
     stages {
         stage('Checkout Code') {
@@ -30,8 +31,10 @@ pipeline {
         stage('Apply Kubernetes Configs') {
             steps {
                 echo 'Deploying to Kubernetes...'
-                sh 'kubectl apply -f mysql-deployment.yaml'
-                sh 'kubectl apply -f wordpress-deployment.yaml'
+                withCredentials([file(credentialsId: 'k8s-secret-file-id', variable: 'KUBECONFIG')]) {
+                    sh 'kubectl apply -f mysql-deployment.yaml'
+                    sh 'kubectl apply -f wordpress-deployment.yaml'
+                }
             }
         }
     }
